@@ -1,0 +1,51 @@
+<div class="dashboard-grid">
+  <!-- Search Panel -->
+  <div class="glass-panel">
+    <h2>Find Nearest Parking</h2>
+    <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Enter your coordinates to find lots.</p>
+    
+    <label>Latitude</label>
+    <input type="number" class="input-premium" [(ngModel)]="lat">
+    <label>Longitude</label>
+    <input type="number" class="input-premium" [(ngModel)]="lng">
+    <label>Radius (km)</label>
+    <input type="number" class="input-premium" [(ngModel)]="radius">
+
+    <button class="btn-primary" style="width: 100%" (click)="searchLots()">Search Nearby</button>
+  </div>
+
+  <!-- Results Panel -->
+  <div class="glass-panel" style="grid-column: span 2;">
+    <h2>Parking Lots</h2>
+    <div *ngIf="lots.length === 0" style="color: var(--text-muted);">
+      No parking lots found in this area. Increase radius or try different coordinates.
+    </div>
+    
+    <div *ngFor="let lot of lots" style="background: rgba(0,0,0,0.3); padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem; border: var(--glass-border);">
+      <h3 style="margin-bottom: 0.5rem">{{lot.name}}</h3>
+      <p style="margin-bottom: 1rem; color: var(--text-muted)">{{lot.address}} | Lat: {{lot.latitude}}, Lng: {{lot.longitude}}</p>
+      
+      <button class="btn-primary" style="padding: 0.5rem 1rem" (click)="checkAvailability(lot.id!)">Check Availability</button>
+
+      <div *ngIf="selectedLotId === lot.id" style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1);">
+         <div *ngIf="availability.length === 0" style="color: var(--text-muted)">No slots configured.</div>
+         <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+             <div *ngFor="let slot of availability" 
+                  style="padding: 1rem; border-radius: 8px; text-align: center; border: 1px solid rgba(255,255,255,0.2)"
+                  [ngStyle]="{'background': slot.status === 'FREE' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)'}">
+                 <strong style="font-size: 1.2rem; display: block; margin-bottom: 0.25rem;">{{slot.slotNumber ? slot.slotNumber : 'Slot ' + slot.slotId}}</strong>
+                 <span style="font-size: 0.9rem; opacity: 0.8">{{slot.status}}</span>
+                 <br>
+                 <ng-container *ngIf="getMyReservation(slot.slotId) as myRes; else reserveBtn">
+                     <button class="btn-primary" style="background: linear-gradient(135deg, #ef4444, #b91c1c); margin-top: 0.5rem; padding: 0.25rem 0.75rem; font-size: 0.8rem;" (click)="cancelReservation(myRes.id!)">Cancel</button>
+                 </ng-container>
+                 <ng-template #reserveBtn>
+                     <button *ngIf="slot.status === 'FREE'" class="btn-primary" style="margin-top: 0.5rem; padding: 0.25rem 0.75rem; font-size: 0.8rem;" (click)="reserveSlot(slot.slotId)">Reserve</button>
+                 </ng-template>
+             </div>
+         </div>
+         <p *ngIf="msg" style="color: #6ee7b7; margin-top: 1rem;">{{msg}}</p>
+      </div>
+    </div>
+  </div>
+</div>

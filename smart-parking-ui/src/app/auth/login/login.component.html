@@ -1,0 +1,19 @@
+<div style="min-height: 80vh; display: flex; align-items: center; justify-content: center;">
+  <div class="glass-panel" style="width: 100%; max-width: 400px; text-align: center;">
+    <h2>Welcome Back!</h2>
+    <p style="color: var(--text-muted); margin-bottom: 2rem;">Sign in to your Smart Parking account.</p>
+
+    <div *ngIf="error" style="background: rgba(239, 68, 68, 0.2); padding: 1rem; border-radius: 8px; margin-bottom: 1rem; color: #fca5a5;">
+      {{ error }}
+    </div>
+
+    <input type="text" class="input-premium" placeholder="Username" [(ngModel)]="username">
+    <input type="password" class="input-premium" placeholder="Password" [(ngModel)]="password">
+    
+    <button class="btn-primary" style="width: 100%; margin-top: 1rem" (click)="onLogin()">Login</button>
+    
+    <p style="margin-top: 1.5rem; font-size: 0.9rem;">
+      Don't have an account? <a routerLink="/register" style="color: var(--secondary-color); text-decoration: none;">Register here</a>.
+    </p>
+  </div>
+</div>

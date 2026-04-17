@@ -1,0 +1,7 @@
+<div class="nav-bar">
+  <div class="logo">SmartParking / Angular</div>
+  <div>
+    <button class="btn-primary" style="padding: 0.5rem 1rem" (click)="logout()" *ngIf="isLoggedIn()">Logout</button>
+  </div>
+</div>
+<router-outlet></router-outlet>

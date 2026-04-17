@@ -1,0 +1,79 @@
+<div class="nav-bar" style="background: transparent; border-bottom: none; padding: 1rem 2rem;">
+   <div>
+      <button class="btn-primary" style="margin-right: 1rem;" (click)="viewMode = 'overview'">Overview</button>
+      <button class="btn-primary" (click)="viewMode = 'manage'">Manage Lots</button>
+   </div>
+</div>
+
+<div class="dashboard-grid" *ngIf="viewMode === 'manage'">
+  <!-- Add Lot Panel -->
+  <div class="glass-panel">
+    <h2>Add Parking Lot</h2>
+    <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Register a new physical property.</p>
+    
+    <input type="text" class="input-premium" placeholder="Lot Name" [(ngModel)]="newLot.name">
+    <input type="text" class="input-premium" placeholder="Address" [(ngModel)]="newLot.address">
+    <input type="number" class="input-premium" placeholder="Latitude" [(ngModel)]="newLot.latitude">
+    <input type="number" class="input-premium" placeholder="Longitude" [(ngModel)]="newLot.longitude">
+
+    <button class="btn-primary" style="width: 100%" (click)="addLot()">Create Lot</button>
+    <p *ngIf="globalLogMsg" style="color: #6ee7b7; margin-top: 1rem;">{{globalLogMsg}}</p>
+  </div>
+
+  <!-- Manage Panel -->
+  <div class="glass-panel" style="grid-column: span 2;">
+    <h2>Your Managed Lots</h2>
+    
+    <div *ngFor="let lot of lots" style="background: rgba(0,0,0,0.3); padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem; border: var(--glass-border);">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <div>
+           <h3 style="margin-bottom: 0.5rem">{{lot.name}}</h3>
+           <p style="color: var(--text-muted)">{{lot.address}} | ID: {{lot.id}}</p>
+        </div>
+        <div style="display: flex; gap: 10px;">
+           <input type="text" class="input-premium" style="margin: 0; padding: 0.5rem" placeholder="A-1" #slotNum>
+           <button class="btn-primary" style="padding: 0.5rem 1rem" (click)="addSlot(lot.id!, slotNum.value)">+ Add Slot</button>
+        </div>
+      </div>
+      <p *ngIf="logMsgs[lot.id!]" style="color: #6ee7b7; margin-top: 1rem;">{{logMsgs[lot.id!]}}</p>
+    </div>
+  </div>
+</div>
+
+<div class="dashboard-grid" *ngIf="viewMode === 'overview'">
+   <div class="glass-panel" style="grid-column: span 3;" *ngFor="let lot of lots">
+       <h2>{{lot.name}} Overview</h2>
+       <p style="color: var(--text-muted)">{{lot.address}}</p>
+       
+       <!-- Analytics Cards -->
+       <div style="display: flex; gap: 1rem; margin-top: 1.5rem; margin-bottom: 2rem;">
+           <div style="flex: 1; padding: 1.5rem; background: rgba(0,0,0,0.4); border-radius: 12px; text-align: center; border: var(--glass-border);">
+              <h3 style="font-size: 2.5rem; color: #60a5fa">{{lotDetails[lot.id]?.total || 0}}</h3>
+              <p>Total Slots</p>
+           </div>
+           <div style="flex: 1; padding: 1.5rem; background: rgba(0,0,0,0.4); border-radius: 12px; text-align: center; border: var(--glass-border);">
+              <h3 style="font-size: 2.5rem; color: #34d399">{{lotDetails[lot.id]?.free || 0}}</h3>
+              <p>Free Slots</p>
+           </div>
+           <div style="flex: 1; padding: 1.5rem; background: rgba(0,0,0,0.4); border-radius: 12px; text-align: center; border: var(--glass-border);">
+              <h3 style="font-size: 2.5rem; color: #f87171">{{lotDetails[lot.id]?.reserved || 0}}</h3>
+              <p>Reserved Slots</p>
+           </div>
+       </div>
+
+       <!-- Reservations Table -->
+       <h3>Active Reservations</h3>
+       <div *ngIf="!lotDetails[lot.id]?.reservations?.length" style="color: var(--text-muted); padding: 1rem 0;">No active reservations for this property.</div>
+       <div *ngFor="let res of lotDetails[lot.id]?.reservations" style="display: flex; justify-content: space-between; padding: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
+           <div>
+              <strong>Slot ID: {{res.slotId}}</strong>
+              <div style="font-size: 0.9rem; color: var(--text-muted);">Booked at: {{res.startTime | date:'short'}}</div>
+           </div>
+           <div>
+              <span style="background: rgba(79, 70, 229, 0.3); padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.8rem;">
+                 {{res.userName ? res.userName : 'User ' + res.userId}}
+              </span>
+           </div>
+       </div>
+   </div>
+</div>

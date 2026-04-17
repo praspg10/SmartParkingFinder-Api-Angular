@@ -1,0 +1,24 @@
+<div style="min-height: 80vh; display: flex; align-items: center; justify-content: center;">
+  <div class="glass-panel" style="width: 100%; max-width: 400px; text-align: center;">
+    <h2>Create Account</h2>
+    <p style="color: var(--text-muted); margin-bottom: 2rem;">Join the Smart Parking network.</p>
+
+    <div *ngIf="error" style="background: rgba(239, 68, 68, 0.2); padding: 1rem; border-radius: 8px; margin-bottom: 1rem; color: #fca5a5;">
+      {{ error }}
+    </div>
+
+    <input type="text" class="input-premium" placeholder="Username" [(ngModel)]="username">
+    <input type="password" class="input-premium" placeholder="Password" [(ngModel)]="password">
+    
+    <select class="input-premium" [(ngModel)]="role" style="background: rgba(17, 24, 39, 0.8);">
+      <option value="DRIVER">Driver (Find Parking)</option>
+      <option value="OWNER">Owner (Manage Lots)</option>
+    </select>
+
+    <button class="btn-primary" style="width: 100%; margin-top: 1rem" (click)="onRegister()">Register</button>
+    
+    <p style="margin-top: 1.5rem; font-size: 0.9rem;">
+      Already have an account? <a routerLink="/login" style="color: var(--primary-color); text-decoration: none;">Login here</a>.
+    </p>
+  </div>
+</div>
